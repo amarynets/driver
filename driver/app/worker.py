@@ -5,7 +5,6 @@ from celery import Celery
 from celery.utils.log import get_task_logger
 import haversine as hs
 
-# Create the celery app and get the logger
 from app.config import settings
 from app.db import SessionLocal
 from app.models import Position
@@ -19,6 +18,7 @@ logger = get_task_logger(__name__)
 def handle_position(position):
     db = SessionLocal()
     position = PositionSchema(**json.loads(position))
+    calculated_speed = 0
     if not position.received_at:
         position.received_at = datetime.datetime.utcnow()
     if position.speed > settings.MAX_SPEED:
@@ -49,16 +49,16 @@ def handle_position(position):
                     is_valid = True
         else:
             is_valid = True
-            calculated_speed = 0
-        position = Position(
-            driver_id=position.driver_id,
-            latitude=position.latitude,
-            longitude=position.longitude,
-            speed=position.speed,
-            altitude=position.altitude,
-            calculated_speed=calculated_speed,
-            is_valid=is_valid,
-            received_at=position.received_at
-        )
-        db.add(position)
-        db.commit()
+
+    position = Position(
+        driver_id=position.driver_id,
+        latitude=position.latitude,
+        longitude=position.longitude,
+        speed=position.speed,
+        altitude=position.altitude,
+        calculated_speed=calculated_speed,
+        is_valid=is_valid,
+        received_at=position.received_at
+    )
+    db.add(position)
+    db.commit()
