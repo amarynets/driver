@@ -19,6 +19,8 @@ services:
       - DB_HOST=db
     depends_on:
       - db
+  rabbit:
+    image: rabbitmq:latest
   app:
     build:
       context: .
@@ -30,8 +32,20 @@ services:
     depends_on:
       - db
       - alembic
+      - rabbit
     ports:
       - 8000:8000
+  worker:
+    build:
+      context: .
+      dockerfile: worker.dockerfile
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+      - rabbit
 
 volumes:
   db-data:
