@@ -1,6 +1,5 @@
 import datetime
 from fastapi import APIRouter
-import haversine as hs
 
 from app.schema import Position as PositionSchema
 from app.models import Position
@@ -31,4 +30,18 @@ def health_check():
     return {
         'db_alive': db_alive
     }
+
+
+@router.get('/metrics')
+def health_check():
+    db = SessionLocal()
+    # TODO: Some positions could not be saved yet
+    return {
+        'total_positions': db.query(Position).count(),
+        'number_of_drivers': db.query(Position).distinct(Position.driver_id).count(),
+        'wrong_altitude': db.query(Position).filter(Position.altitude > settings.MAX_ALTITUDE).count(),
+        'wrong_speed': db.query(Position).filter(Position.speed > settings.MAX_SPEED).count(),
+        'unexpected_displacement': db.query(Position).filter(Position.calculated_speed > settings.MAX_SPEED).count()
+    }
+
 

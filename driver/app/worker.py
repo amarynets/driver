@@ -33,13 +33,14 @@ def handle_position(position):
         if last_driver_position:
             displacement = hs.haversine((position.latitude, position.longitude),
                                         (last_driver_position.latitude, last_driver_position.longitude))
+            time = position.received_at - last_driver_position.received_at
+            calculated_speed = displacement / time.seconds * 3600
             if displacement == 0 and position.speed != 0:
                 # Car stay on the same place
                 is_valid = False
                 logger.warning(f'Driver: {position.driver_id} is not moving, but speed is not 0')
             else:
-                time = position.received_at - last_driver_position.received_at
-                calculated_speed = displacement / time.seconds * 3600
+
                 if calculated_speed > settings.MAX_SPEED:
                     is_valid = False
                     logger.warning(f'Driver: {position.driver_id} moved from coordinates{(last_driver_position.latitude, last_driver_position.longitude)}'
@@ -48,14 +49,16 @@ def handle_position(position):
                     is_valid = True
         else:
             is_valid = True
-    position = Position(
-        driver_id=position.driver_id,
-        latitude=position.latitude,
-        longitude=position.longitude,
-        speed=position.speed,
-        altitude=position.altitude,
-        is_valid=is_valid,
-        received_at=position.received_at
-    )
-    db.add(position)
-    db.commit()
+            calculated_speed = 0
+        position = Position(
+            driver_id=position.driver_id,
+            latitude=position.latitude,
+            longitude=position.longitude,
+            speed=position.speed,
+            altitude=position.altitude,
+            calculated_speed=calculated_speed,
+            is_valid=is_valid,
+            received_at=position.received_at
+        )
+        db.add(position)
+        db.commit()

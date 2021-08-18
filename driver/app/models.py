@@ -12,6 +12,7 @@ class Position(Base):
     longitude = Column(Float)
     speed = Column(Float)
     altitude = Column(Float)
+    calculated_speed = Column(Float, default=0)
     is_valid = Column(Boolean)
     received_at = Column(TIMESTAMP, default=datetime.datetime.utcnow)
     created_at = Column(TIMESTAMP, default=datetime.datetime.utcnow)
