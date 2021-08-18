@@ -15,6 +15,7 @@ router = APIRouter()
 
 @router.post('/positions', response_model=PositionSchema)
 def upload_position(position: PositionSchema):
+    # TODO: Change session creation
     db = SessionLocal()
     if not position.received_at:
         position.received_at = datetime.datetime.utcnow()
@@ -42,7 +43,6 @@ def upload_position(position: PositionSchema):
                     is_valid = True
         else:
             is_valid = True
-
     position = Position(
         driver_id=position.driver_id,
         latitude=position.latitude,
@@ -54,4 +54,18 @@ def upload_position(position: PositionSchema):
     )
     db.add(position)
     db.commit()
+
+
+
+@router.get('/health-check')
+def health_check():
+    try:
+        db = SessionLocal()
+        db.execute('SELECT 1;')
+        db_alive = True
+    except Exception as e:
+        db_alive = False
+    return {
+        'db_alive': db_alive
+    }
 
