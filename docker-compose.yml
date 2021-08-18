@@ -46,6 +46,16 @@ services:
     depends_on:
       - db
       - rabbit
+  generator:
+    build:
+      context: .
+      dockerfile: generator.dockerfile
+    env_file:
+      - .env
+    environment:
+      - SERVICE_HOST=http://app:8000
+    depends_on:
+      - app
 
 volumes:
   db-data:

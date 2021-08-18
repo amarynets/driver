@@ -1,12 +1,11 @@
-import sys
+import os
 import random
 import asyncio
 import aiohttp
 
-from config import settings
-
-num_of_drivers = int(sys.argv[1])
-time_interval = int(sys.argv[2])
+num_of_drivers = int(os.environ['DRIVER_NUMBER'])
+time_interval = int(os.environ['POSITION_SEND_INTERVAL'])
+service_host = os.environ['SERVICE_HOST']
 
 
 def generate_position(driver_id):
@@ -21,7 +20,7 @@ def generate_position(driver_id):
 
 async def send_position(session, position):
 
-    async with session.post(f'{settings.SERVICE_HOST}/positions', json=position) as resp:
+    async with session.post(f'{service_host}/positions', json=position) as resp:
         text = await resp.text()
         return resp.status, text
 
