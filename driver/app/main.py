@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from config import settings
-from resources import router
+from app.config import settings
+from app.resources import router
 
 app = FastAPI(
     title=settings.APP_NAME, openapi_url="/openapi.json"

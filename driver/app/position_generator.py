@@ -1,10 +1,9 @@
 import sys
 import random
 import asyncio
-import time
 import aiohttp
 
-from app.config import settings
+from config import settings
 
 num_of_drivers = int(sys.argv[1])
 time_interval = int(sys.argv[2])

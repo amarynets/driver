@@ -1,4 +1,3 @@
-import math
 import datetime
 from fastapi import APIRouter
 import haversine as hs
@@ -54,7 +53,6 @@ def upload_position(position: PositionSchema):
     )
     db.add(position)
     db.commit()
-
 
 
 @router.get('/health-check')
