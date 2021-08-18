@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     SQLALCHEMY_DATABASE_URI: str = None
+    MAX_SPEED: float = 50
+    MAX_ALTITUDE: float = 200
+    SERVICE_HOST: str
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v, values):
