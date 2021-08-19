@@ -51,7 +51,7 @@ def validate_position(position, last_driver_position, settings):
     if last_driver_position and position.displacement_speed == 0 and position.speed != 0:
         # Car stay on the same place
         raise DisplacementSpeedValidationError(f'Driver: {position.driver_id} is not moving, but speed is not 0')
-    if position.displacement_speed > settings.MAX_SPEED:
+    if position.displacement_speed and position.displacement_speed > settings.MAX_SPEED:
         raise DisplacementSpeedValidationError(
             f'Driver: {position.driver_id} moved from coordinates{(last_driver_position.latitude, last_driver_position.longitude)}'
             f' to {(position.latitude, position.longitude)} with higher speed({position.displacement_speed}) than allowed({settings.MAX_SPEED})'

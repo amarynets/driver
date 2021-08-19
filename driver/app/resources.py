@@ -41,7 +41,7 @@ def health_check():
         'number_of_drivers': db.query(Position).distinct(Position.driver_id).count(),
         'wrong_altitude': db.query(Position).filter(Position.altitude > settings.MAX_ALTITUDE).count(),
         'wrong_speed': db.query(Position).filter(Position.speed > settings.MAX_SPEED).count(),
-        'unexpected_displacement': db.query(Position).filter(Position.calculated_speed > settings.MAX_SPEED).count()
+        'unexpected_displacement': db.query(Position).filter(Position.displacement_speed > settings.MAX_SPEED).count()
     }
 
 

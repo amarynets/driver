@@ -20,7 +20,6 @@ def handle_position(position):
     last_driver_position = db.query(Position).filter_by(driver_id=position.driver_id).order_by(
         Position.id.desc()).limit(1).first()
     position = prepare_position(position, last_driver_position, settings)
-
     position = Position(
         driver_id=position.driver_id,
         latitude=position.latitude,
