@@ -11,6 +11,7 @@ class Position(BaseModel):
     longitude: float
     speed: float
     altitude: float
+    displacement_speed: Optional[float] = None
     is_valid: Optional[bool]
     received_at: Optional[datetime] = None
 
